@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220327233418_ProjectPart3")]
+    partial class ProjectPart3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
@@ -40,6 +42,10 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.AppProject", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AppMilestoneId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
@@ -49,6 +55,8 @@ namespace API.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppMilestoneId");
 
                     b.ToTable("Projects");
                 });
@@ -83,22 +91,28 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.AppTicket", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AppRoleId")
+                    b.Property<int?>("AppProjectId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MyProperty")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppRoleId");
+                    b.HasIndex("AppProjectId");
 
-                    b.ToTable("Tickets");
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Bugs");
                 });
 
             modelBuilder.Entity("API.Entities.AppUser", b =>
@@ -282,36 +296,20 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.AppProject", b =>
                 {
-                    b.HasOne("API.Entities.AppMilestone", "Milestone")
+                    b.HasOne("API.Entities.AppMilestone", null)
                         .WithMany("Projects")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Milestone");
+                        .HasForeignKey("AppMilestoneId");
                 });
 
             modelBuilder.Entity("API.Entities.AppTicket", b =>
                 {
-                    b.HasOne("API.Entities.AppRole", null)
-                        .WithMany("AssignedTickets")
-                        .HasForeignKey("AppRoleId");
-
-                    b.HasOne("API.Entities.AppProject", "Project")
+                    b.HasOne("API.Entities.AppProject", null)
                         .WithMany("Tickets")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("AppProjectId");
 
-                    b.HasOne("API.Entities.AppUser", "AssignedUser")
-                        .WithMany("AssignedTickets")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("AssignedUser");
-
-                    b.Navigation("Project");
+                    b.HasOne("API.Entities.AppUser", null)
+                        .WithMany("Tickets")
+                        .HasForeignKey("AppUserId");
                 });
 
             modelBuilder.Entity("API.Entities.AppUserRole", b =>
@@ -396,14 +394,12 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.AppRole", b =>
                 {
-                    b.Navigation("AssignedTickets");
-
                     b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("API.Entities.AppUser", b =>
                 {
-                    b.Navigation("AssignedTickets");
+                    b.Navigation("Tickets");
 
                     b.Navigation("UserRoles");
                 });

@@ -14,13 +14,15 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip' ;
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
-    RegisterComponent
+    RegisterComponent,
+    AdminPanelComponent
   ],
   imports: [
     BrowserModule,

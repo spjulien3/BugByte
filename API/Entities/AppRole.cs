@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace API.Entities
 {
-    public class AppUser : IdentityUser<int>
+    public class AppRole : IdentityRole<int>
     {
         public ICollection<AppUserRole> UserRoles { get; set; }
-        public ICollection<AppProject> AssignedProjects { get; set; }
+
         public ICollection<AppTicket> AssignedTickets { get; set; }
     }
 }
