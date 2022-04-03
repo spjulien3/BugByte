@@ -40,21 +40,15 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.AppProject", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("MilestoneId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MilestoneId");
 
                     b.ToTable("Projects");
                 });
@@ -89,20 +83,13 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.AppTicket", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("AppRoleId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AssignedUserId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
@@ -110,10 +97,6 @@ namespace API.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppRoleId");
-
-                    b.HasIndex("AssignedUserId");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("Tickets");
                 });
@@ -301,7 +284,9 @@ namespace API.Data.Migrations
                 {
                     b.HasOne("API.Entities.AppMilestone", "Milestone")
                         .WithMany("Projects")
-                        .HasForeignKey("MilestoneId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Milestone");
                 });
@@ -312,13 +297,17 @@ namespace API.Data.Migrations
                         .WithMany("AssignedTickets")
                         .HasForeignKey("AppRoleId");
 
-                    b.HasOne("API.Entities.AppUser", "AssignedUser")
-                        .WithMany("AssignedTickets")
-                        .HasForeignKey("AssignedUserId");
-
                     b.HasOne("API.Entities.AppProject", "Project")
                         .WithMany("Tickets")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.AppUser", "AssignedUser")
+                        .WithMany("AssignedTickets")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("AssignedUser");
 
