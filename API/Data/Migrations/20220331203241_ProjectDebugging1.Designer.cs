@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220331203241_ProjectDebugging1")]
+    partial class ProjectDebugging1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
@@ -46,15 +48,10 @@ namespace API.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("MilestoneId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MilestoneId");
 
                     b.ToTable("Projects");
                 });
@@ -89,20 +86,13 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.AppTicket", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("AppRoleId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AssignedUserId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
@@ -110,10 +100,6 @@ namespace API.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppRoleId");
-
-                    b.HasIndex("AssignedUserId");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("Tickets");
                 });
@@ -301,7 +287,9 @@ namespace API.Data.Migrations
                 {
                     b.HasOne("API.Entities.AppMilestone", "Milestone")
                         .WithMany("Projects")
-                        .HasForeignKey("MilestoneId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Milestone");
                 });
@@ -312,13 +300,17 @@ namespace API.Data.Migrations
                         .WithMany("AssignedTickets")
                         .HasForeignKey("AppRoleId");
 
-                    b.HasOne("API.Entities.AppUser", "AssignedUser")
-                        .WithMany("AssignedTickets")
-                        .HasForeignKey("AssignedUserId");
-
                     b.HasOne("API.Entities.AppProject", "Project")
                         .WithMany("Tickets")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.AppUser", "AssignedUser")
+                        .WithMany("AssignedTickets")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("AssignedUser");
 

@@ -25,7 +25,7 @@ namespace API.Controllers
             _userRepository = userRepository;
         }
 
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
@@ -34,7 +34,7 @@ namespace API.Controllers
             return Ok(usersToReturn) ;
         }
 
-        [Authorize (Roles = "User")]
+        //[Authorize (Roles = "User")]
         [HttpGet("{username}", Name = "GetUser")]
         public async Task<ActionResult<AppUser>> GetUser(string username)
         {
