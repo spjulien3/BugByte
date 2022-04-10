@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220410084904_addTicketPart2")]
+    partial class addTicketPart2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
@@ -104,7 +106,7 @@ namespace API.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PriorityId")
+                    b.Property<int?>("PriorityId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("ProjectId")
@@ -218,28 +220,6 @@ namespace API.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Priority");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Low"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Medium"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "High"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Critical"
-                        });
                 });
 
             modelBuilder.Entity("AppProjectAppUser", b =>
@@ -362,9 +342,7 @@ namespace API.Data.Migrations
 
                     b.HasOne("API.Entities.Priority", "Priority")
                         .WithMany()
-                        .HasForeignKey("PriorityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PriorityId");
 
                     b.HasOne("API.Entities.AppProject", "Project")
                         .WithMany("Tickets")

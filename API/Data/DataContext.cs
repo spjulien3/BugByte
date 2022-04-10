@@ -39,24 +39,44 @@ namespace API.Data
             builder.Entity<AppProject>()
             .HasMany(p => p.AssignedUsers)
             .WithMany(u => u.AssignedProjects);
+            
+            builder.Entity<AppProject>()
+            .Property(p => p.Id)
+            .ValueGeneratedOnAdd();
+
+            // builder.Entity<AppTicket>()
+            // .HasOne<AppProject>(p => p.Project)
+            // .WithMany(p => p.Tickets);
 
             builder.Entity<AppTicket>()
-            .HasOne(p => p.Project)
-            .WithMany(t => t.Tickets)
-            .HasForeignKey(i => i.Id)
-            .OnDelete(DeleteBehavior.NoAction);
+            .Property(p => p.Id)
+            .ValueGeneratedOnAdd();
 
-            builder.Entity<AppUser>()
-            .HasMany(u => u.AssignedTickets)
-            .WithOne(t => t.AssignedUser)
-            .HasForeignKey(t => t.Id)
-            .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Priority>()
+            .HasData(
+                new  {Id = 1, Description = "Low"},
+                new  {Id = 2, Description = "Medium"},
+                new  {Id = 3, Description = "High"},
+                new  {Id = 4, Description = "Critical"}
+            );
 
-            builder.Entity<AppMilestone>()
-            .HasMany(m => m.Projects)
-            .WithOne(p => p.Milestone)
-            .HasForeignKey(m => m.Id)
-            .OnDelete(DeleteBehavior.NoAction);
+            // builder.Entity<AppTicket>()
+            // .HasOne(p => p.Project)
+            // .WithMany(t => t.Tickets)
+            // .HasForeignKey(i => i.Id)
+            // .OnDelete(DeleteBehavior.NoAction);
+
+            // builder.Entity<AppUser>()
+            // .HasMany(u => u.AssignedTickets)
+            // .WithOne(t => t.AssignedUser)
+            // .HasForeignKey(t => t.Id)
+            // .OnDelete(DeleteBehavior.NoAction);
+
+            // builder.Entity<AppMilestone>()
+            // .HasMany(m => m.Projects)
+            // .WithOne(p => p.Milestone)
+            // .HasForeignKey(m => m.Id)
+            // .OnDelete(DeleteBehavior.NoAction);
 
 
         }
