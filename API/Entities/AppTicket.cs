@@ -11,7 +11,11 @@ namespace API.Entities
         public string Title { get; set; }
         public DateTime DateCreated { get; set; }
         public AppUser AssignedUser { get; set; }
-        public AppProject Project { get; set; }
+        public string Description { get; set; }
+        public int PriorityId { get; set; }
         
+        //Nav
+        public AppProject Project { get; set; }
+        public Priority Priority { get; set; }
     }
 }

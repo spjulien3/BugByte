@@ -34,7 +34,7 @@ namespace API.Controllers
             return Ok(usersToReturn) ;
         }
 
-        [Authorize (Roles = "User")]
+        [Authorize (Roles = "Admin")]
         [HttpGet("{username}", Name = "GetUser")]
         public async Task<ActionResult<AppUser>> GetUser(string username)
         {
