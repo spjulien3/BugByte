@@ -10,6 +10,6 @@ namespace API.Entities
     {
         public ICollection<AppUserRole> UserRoles { get; set; }
 
-        public ICollection<AppTicket> AssignedTickets { get; set; }
+        
     }
 }

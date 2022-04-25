@@ -2,9 +2,9 @@
 
 #nullable disable
 
-namespace API.Data.Migrations
+namespace API.Migrations
 {
-    public partial class AddedMilestonesTicketsPart2 : Migration
+    public partial class ticketsModelPart3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

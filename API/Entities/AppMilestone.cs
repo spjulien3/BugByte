@@ -1,16 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace API.Entities
 {
     public class AppMilestone
     {
+
         public int Id { get; set; }
-        public string Title { get; set; }
-        public ICollection<AppProject> Projects { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public List<AppProject> Projects { get; set; }
+
     }
 }

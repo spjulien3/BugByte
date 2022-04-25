@@ -16,9 +16,13 @@ namespace API.Data
         public DataContext(DbContextOptions options) : base(options)
         {
         }
-        public DbSet<AppProject> Projects {get; set;}  
+      /*  public DbSet<AppProject> Projects {get; set;}  
         public DbSet<AppMilestone> Milestones { get; set; } 
+        public DbSet<AppTicket> Tickets { get; set; }*/
         public DbSet<AppTicket> Tickets { get; set; }
+        public DbSet<AppProject> Projects { get; set; }
+        public DbSet<Priority> Priorities { get; set; }
+        public DbSet<AppMilestone> Milestones { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -36,21 +40,22 @@ namespace API.Data
             .HasForeignKey(ur => ur.RoleId)
             .IsRequired();
 
-            builder.Entity<AppProject>()
+            /*builder.Entity<AppProject>()
             .HasMany(p => p.AssignedUsers)
             .WithMany(u => u.AssignedProjects);
             
             builder.Entity<AppProject>()
             .Property(p => p.Id)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd();*/
 
+            //dont uncomment
             // builder.Entity<AppTicket>()
             // .HasOne<AppProject>(p => p.Project)
             // .WithMany(p => p.Tickets);
 
-            builder.Entity<AppTicket>()
+            /*builder.Entity<AppTicket>()
             .Property(p => p.Id)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd();*/
 
             builder.Entity<Priority>()
             .HasData(
@@ -60,6 +65,8 @@ namespace API.Data
                 new  {Id = 4, Description = "Critical"}
             );
 
+
+            //Dont uncomment
             // builder.Entity<AppTicket>()
             // .HasOne(p => p.Project)
             // .WithMany(t => t.Tickets)
