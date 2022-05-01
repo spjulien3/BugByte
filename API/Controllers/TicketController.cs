@@ -24,6 +24,8 @@ namespace API.Controllers
                 .Include(t => t.AssignedUser)
                 .Include(t => t.Priority)
                 .ToListAsync();
+            
+            if(tickets == null) return null;
 
 
             return tickets;
@@ -54,6 +56,7 @@ namespace API.Controllers
             {
 
                 var authorUser = await _context.Users.FindAsync(request.AuthorUserId);
+                if (authorUser == null) return BadRequest();
 
                 var newTicket = new AppTicket
                 {
@@ -73,6 +76,9 @@ namespace API.Controllers
             {
                 var authorUser = await _context.Users.FindAsync(request.AuthorUserId);
                 var assignedUser = await _context.Users.FindAsync(request.AssignedUserId);
+
+                if (authorUser == null) return BadRequest();
+                if (assignedUser == null) return BadRequest();
 
 
 
@@ -98,7 +104,47 @@ namespace API.Controllers
             
         }
 
-        
+
+        [HttpPut("/update-ticket")]
+        public async Task<ActionResult<AppTicket>> UpdateTicket(UpdateTicketDto request)
+        {
+
+            var ticket = await _context.Tickets
+                .Where( t => t.Id == request.Id)
+                .FirstOrDefaultAsync();
+            if (ticket == null) return BadRequest();
+
+            var assignedUser = await _context.Users
+                .Where(u => u.Id == request.AssignedUserId)
+                .FirstOrDefaultAsync();
+            if (assignedUser == null) return BadRequest();
+
+
+            ticket.Title = request.Title;
+            ticket.Description = request.Description;
+            ticket.AssignedUserId = ticket.AssignedUserId;
+            ticket.AssignedUser = assignedUser;
+            ticket.ProjectId = request.ProjectId;
+            ticket.PriorityId = request.PriorityId;
+
+
+            await _context.SaveChangesAsync();
+            return Ok(ticket);
+
+        }
+
+        [HttpDelete("/delete-ticket/{id}")]
+        public async Task<ActionResult<AppTicket>> DeleteTicket(int id)
+        {
+            var ticket = await _context.Tickets.Where(t => t.Id == id).FirstOrDefaultAsync();
+            if(ticket == null) return BadRequest();
+
+            _context.Tickets.Remove(ticket);
+            await _context.SaveChangesAsync();
+            return Ok(ticket);
+
+        }
+
 
 
 
