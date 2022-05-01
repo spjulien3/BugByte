@@ -4,6 +4,7 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220501204116_nullableFkPart3")]
+    partial class nullableFkPart3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +40,7 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Milestones", (string)null);
+                    b.ToTable("Milestones");
                 });
 
             modelBuilder.Entity("API.Entities.AppProject", b =>
@@ -62,7 +64,7 @@ namespace API.Migrations
 
                     b.HasIndex("MilestoneId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("API.Entities.AppRole", b =>
@@ -131,7 +133,7 @@ namespace API.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Tickets", (string)null);
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("API.Entities.AppUser", b =>
@@ -230,7 +232,7 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Priorities", (string)null);
+                    b.ToTable("Priorities");
 
                     b.HasData(
                         new

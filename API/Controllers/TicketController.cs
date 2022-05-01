@@ -16,12 +16,12 @@ namespace API.Controllers
         }
 
         [HttpGet("/tickets/{userId}")]
-        public async Task<List<AppTicket>> GetTicketsByUserId(int userId)
+        public async Task<List<AppTicket>> GetTicketsByAssignedUserId(int assignedUserId)
         {
             var tickets = await _context.Tickets
-                .Where(t => t.UserId == userId)
+                .Where(t => t.AssignedUserId == assignedUserId)
                 .Include(t => t.Project)
-                .Include(t => t.User)
+                .Include(t => t.AssignedUser)
                 .Include(t => t.Priority)
                 .ToListAsync();
 
@@ -35,7 +35,7 @@ namespace API.Controllers
             var tickets = await _context.Tickets.
                 Where(t => t.Id == ticketId)
                 .Include(t => t.Project)
-                .Include(t => t.User)
+                .Include(t => t.AssignedUser)
                 .Include(t => t.Priority)
                 .FirstOrDefaultAsync();
 
@@ -49,27 +49,56 @@ namespace API.Controllers
         [HttpPost("/create-ticket")]
         public async Task<ActionResult<AppTicket>> CreateTicket(CreateTicketDto request)
         {
-            var user = await _context.Users.FindAsync(request.UserId);
-            if (user == null)
-                return NotFound();
 
-            var newTicket = new AppTicket
+            if (request.AssignedUserId == 0)
             {
-                Title = request.Title,
-                Description = request.Description,
-                UserId = request.UserId,
-                ProjectId = request.ProjectId,
-                PriorityId = request.PriorityId,
-                User = user
-            };
 
-            _context.Tickets.Add(newTicket);
-            await _context.SaveChangesAsync();
+                var authorUser = await _context.Users.FindAsync(request.AuthorUserId);
+
+                var newTicket = new AppTicket
+                {
+                    Title = request.Title,
+                    Description = request.Description,
+                    AuthorUserId = request.AuthorUserId,
+                    ProjectId = request.ProjectId,
+                    PriorityId = request.PriorityId,
+                    AuthorUser = authorUser
+                };
+
+                _context.Tickets.Add(newTicket);
+                await _context.SaveChangesAsync();
+                return await GetTicketByTicketId((int)newTicket.Id);
+            }
+            else
+            {
+                var authorUser = await _context.Users.FindAsync(request.AuthorUserId);
+                var assignedUser = await _context.Users.FindAsync(request.AssignedUserId);
+
+
+
+                var newTicket = new AppTicket
+                {
+                    Title = request.Title,
+                    Description = request.Description,
+                    AuthorUserId = request.AuthorUserId,
+                    AssignedUserId = request.AssignedUserId,
+                    ProjectId = request.ProjectId,
+                    PriorityId = request.PriorityId,
+                    AuthorUser = authorUser,
+                    AssignedUser = assignedUser
+                };
+
+                _context.Tickets.Add(newTicket);
+                await _context.SaveChangesAsync();
+                return await GetTicketByTicketId((int)newTicket.Id);
+
+            }
+
+
             
-
-
-            return await GetTicketByTicketId((int)newTicket.Id) ;
         }
+
+        
 
 
 

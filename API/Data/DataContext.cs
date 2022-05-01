@@ -40,22 +40,15 @@ namespace API.Data
             .HasForeignKey(ur => ur.RoleId)
             .IsRequired();
 
-            /*builder.Entity<AppProject>()
-            .HasMany(p => p.AssignedUsers)
-            .WithMany(u => u.AssignedProjects);
-            
-            builder.Entity<AppProject>()
-            .Property(p => p.Id)
-            .ValueGeneratedOnAdd();*/
+            builder.Entity<AppUser>()
+                .HasMany(u => u.AssignedTickets)
+                .WithOne(t => t.AssignedUser)
+                .HasForeignKey(t => t.AssignedUserId);
 
-            //dont uncomment
-            // builder.Entity<AppTicket>()
-            // .HasOne<AppProject>(p => p.Project)
-            // .WithMany(p => p.Tickets);
-
-            /*builder.Entity<AppTicket>()
-            .Property(p => p.Id)
-            .ValueGeneratedOnAdd();*/
+            builder.Entity<AppUser>()
+                .HasMany(u => u.CreatedTickets)
+                .WithOne(t => t.AuthorUser)
+                .HasForeignKey(t => t.AuthorUserId);
 
             builder.Entity<Priority>()
             .HasData(
@@ -66,24 +59,7 @@ namespace API.Data
             );
 
 
-            //Dont uncomment
-            // builder.Entity<AppTicket>()
-            // .HasOne(p => p.Project)
-            // .WithMany(t => t.Tickets)
-            // .HasForeignKey(i => i.Id)
-            // .OnDelete(DeleteBehavior.NoAction);
-
-            // builder.Entity<AppUser>()
-            // .HasMany(u => u.AssignedTickets)
-            // .WithOne(t => t.AssignedUser)
-            // .HasForeignKey(t => t.Id)
-            // .OnDelete(DeleteBehavior.NoAction);
-
-            // builder.Entity<AppMilestone>()
-            // .HasMany(m => m.Projects)
-            // .WithOne(p => p.Milestone)
-            // .HasForeignKey(m => m.Id)
-            // .OnDelete(DeleteBehavior.NoAction);
+            
 
 
         }

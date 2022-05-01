@@ -31,6 +31,7 @@ namespace API.Controllers
             var milestone = await _context.Milestones.
                 Where(m => m.Id == milestoneId)
                 .Include(t => t.Projects)
+                .ThenInclude( p => p.Tickets)
                 .FirstOrDefaultAsync();
 
             if (milestone == null) return NotFound();
@@ -59,5 +60,9 @@ namespace API.Controllers
 
             return await GetMilestoneByMilestoneId((int)newMilestone.Id);
         }
+
+
+
+
     }
 }

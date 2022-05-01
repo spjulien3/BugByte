@@ -4,6 +4,7 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220501183929_nullableFkPart2")]
+    partial class nullableFkPart2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +40,7 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Milestones", (string)null);
+                    b.ToTable("Milestones");
                 });
 
             modelBuilder.Entity("API.Entities.AppProject", b =>
@@ -62,7 +64,7 @@ namespace API.Migrations
 
                     b.HasIndex("MilestoneId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("API.Entities.AppRole", b =>
@@ -103,12 +105,6 @@ namespace API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("AssignedUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AuthorUserId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -121,17 +117,18 @@ namespace API.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
-
-                    b.HasIndex("AssignedUserId");
-
-                    b.HasIndex("AuthorUserId");
 
                     b.HasIndex("PriorityId");
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Tickets", (string)null);
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("API.Entities.AppUser", b =>
@@ -230,7 +227,7 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Priorities", (string)null);
+                    b.ToTable("Priorities");
 
                     b.HasData(
                         new
@@ -354,16 +351,6 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Entities.AppTicket", b =>
                 {
-                    b.HasOne("API.Entities.AppUser", "AssignedUser")
-                        .WithMany("AssignedTickets")
-                        .HasForeignKey("AssignedUserId");
-
-                    b.HasOne("API.Entities.AppUser", "AuthorUser")
-                        .WithMany("CreatedTickets")
-                        .HasForeignKey("AuthorUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("API.Entities.Priority", "Priority")
                         .WithMany()
                         .HasForeignKey("PriorityId");
@@ -372,13 +359,15 @@ namespace API.Migrations
                         .WithMany("Tickets")
                         .HasForeignKey("ProjectId");
 
-                    b.Navigation("AssignedUser");
-
-                    b.Navigation("AuthorUser");
+                    b.HasOne("API.Entities.AppUser", "User")
+                        .WithMany("Ticket")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Priority");
 
                     b.Navigation("Project");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("API.Entities.AppUserRole", b =>
@@ -453,9 +442,7 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Entities.AppUser", b =>
                 {
-                    b.Navigation("AssignedTickets");
-
-                    b.Navigation("CreatedTickets");
+                    b.Navigation("Ticket");
 
                     b.Navigation("UserRoles");
                 });
