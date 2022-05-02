@@ -76,5 +76,18 @@ namespace API.Controllers
         {
             return await _userManager.Users.AnyAsync(x => x.UserName == username.ToLower());
         }
+
+        [HttpDelete("delete-user/{id}")]
+        public async Task<ActionResult<AppUser>> DeleteUser(int id)
+        {
+
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == id);
+            if (user == null) return NotFound();
+
+            await _userManager.DeleteAsync(user);
+            return Ok(user);
+
+
+        }
     }
 }

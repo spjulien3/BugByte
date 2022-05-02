@@ -62,7 +62,37 @@ namespace API.Controllers
         }
 
 
-        
+        [HttpPut("/update-milestone")]
+        public async Task<ActionResult<AppMilestone>> UpdateMilestone(UpdateMilestoneDto request)
+        {
+
+            var milestone = await _context.Milestones
+                .Where(t => t.Id == request.Id)
+                .FirstOrDefaultAsync();
+            if (milestone == null) return BadRequest();
+
+            milestone.Title = request.Title;
+            milestone.Description = request.Description;
+
+            
+
+
+            await _context.SaveChangesAsync();
+            return Ok(milestone);
+
+        }
+
+        [HttpDelete("/delete-Milestone/{id}")]
+        public async Task<ActionResult<AppMilestone>> DeleteMileston(int id)
+        {
+            var milestone = await _context.Milestones.Where(t => t.Id == id).FirstOrDefaultAsync();
+            if (milestone == null) return BadRequest();
+
+            _context.Milestones.Remove(milestone);
+            await _context.SaveChangesAsync();
+            return Ok(milestone);
+
+        }
 
     }
 }
